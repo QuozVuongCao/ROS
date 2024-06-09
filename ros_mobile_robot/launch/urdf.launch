@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <!--<arg name="model" default="$(find xacro)/xacro '$(find ros_mobile_robot)/urdf/new_robot.xacro'"/>-->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ros_mobile_robot)/urdf/mobile_robot.urdf.xacro'"/>
+    <arg name="rvizconfig" default="$(find ros_mobile_robot)/rviz/urdf.rviz"/>   
+
+    
+        <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+        <param name="rate" value="50"/>
+    </node>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" value="50"/>
+    </node>
+        
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
+   
+</launch>

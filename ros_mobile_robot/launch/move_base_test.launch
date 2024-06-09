@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="use_base_local_planner" default="false"/>
+    <arg name="use_teb_local_planner" default="true"/>
+    <arg name="use_dwa_local_planner" default="false"/>
+    <arg name="use_dwb_local_planner" default="false"/>
+
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/teb_local_planner_params.yaml" if="$(arg use_teb_local_planner)"/>
+    </node>
+</launch>

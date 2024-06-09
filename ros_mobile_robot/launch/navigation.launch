@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="rvizconfig" default="$(find ros_mobile_robot)/rviz/urdf.rviz"/>  
+    <arg name="use_amcl" default="true"/>
+    <arg name="map_file" default="$(find ros_mobile_robot)/maps/test.yaml" />
+    
+
+    <include file="$(find ros_mobile_robot)/launch/urdf.launch">
+    </include>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+            
+    <include file="$(find ros_mobile_robot)/launch/amcl.launch">
+    </include>
+    <!--<node name="odom_pub" pkg="ros_mobile_robot" type="ekf_localization.py"/>-->
+    <!--<node name="odom_pub" pkg="ros_mobile_robot" type="odometry.py"/>-->  
+    <node name="marker_pub" pkg="ros_mobile_robot" type="draw_circle_rviz.py"/>
+    <include file="$(find ros_mobile_robot)/launch/move_base.launch">
+    </include>
+
+</launch>

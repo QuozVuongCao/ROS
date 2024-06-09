@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="use_base_local_planner" default="false"/>
+    <arg name="use_teb_local_planner" default="true"/>
+    <arg name="use_dwa_local_planner" default="false"/>
+    <arg name="use_dwb_local_planner" default="false"/>
+
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/move_base_params.yaml"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/costmap_common_params.yaml" ns="global_costmap"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/costmap_common_params.yaml" ns="local_costmap"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/global_costmap_params.yaml"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/local_costmap_params.yaml"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/dwa_local_planner_params.yaml" if="$(arg use_dwa_local_planner)"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/base_global_planner_params.yaml"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/base_local_planner_params.yaml" if="$(arg use_base_local_planner)"/>
+        <rosparam command="load" file="$(find ros_mobile_robot)/config/param/teb_local_planner_params.yaml" if="$(arg use_teb_local_planner)"/>
+    </node>
+</launch>
