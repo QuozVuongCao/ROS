@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROS Mobile Robot Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200vh;
+            background-image: url('lou.jpg');
+            background-size: cover;
+        }
+        .control-section {
+            width: 800px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #000000;
+        }
+        p {
+            color: #666;
+            margin-top: -3px;
+            font-size: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+        }
+        /* Thiết lập border cho từng nhóm */
+        .group1 {
+            border: 5px solid #0c9400; /* Màu border cho nhóm 1 */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .group2 {
+            border: 5px solid #e67e22; /* Màu border cho nhóm 2 */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .group3 {
+            border: 5px solid #e74c3c; /* Màu border cho nhóm 3 */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .blue-button {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .blue-button:hover{
+            background-color: #fff;
+            color: #3498db;
+        }
+        .send-button{
+            background-color: #4c026e;
+            color: #fff;
+        }
+        .send-button:hover{
+            background-color: #fff;
+            color: #4c026e;
+        }
+        .red-button {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .circle-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .circle-button:hover{
+            background-color: #fff;
+            color: #e74c3c;
+        }
+        .stop-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            color: #fff;
+            margin-inline: 100px;
+            margin-top: -350px;
+        }
+        .stop-button:hover{
+            background-color: #fff;
+            color: #e74c3c;
+        }
+        
+        .emer-button{
+            width: 130px;
+            height: 80px;
+            background-color: hsl(59, 100%, 49%);
+            color: #fff;
+        }
+        .emer-button:hover{
+            background-color: #fff;
+            color: hsl(59, 100%, 49%);
+        }
+        .coordinate-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .coordinate-input input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+            width: 200px;
+        }
+        .green-button {
+            background-color: #01cf57; /* Màu xanh lá cây */
+            color: #fff;
+            font-size: 30px; /* Điều chỉnh kích thước của font chữ */
+        }
+        .green-button:hover{
+            background-color: #fff; /* Màu xanh lá cây */
+            color: #01cf57;
+        }
+        .orange-button {
+            background-color: #e67e22; /* Màu cam */
+            color: #fff;
+        }
+        .orange-button:hover{
+            background-color:#fff; /* Màu cam */
+            color: #e67e22;
+        }
+        .vertical-button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .left-button {
+            margin-bottom: 0px;
+            margin-right: 70px;
+        }
+        .right-button {
+            margin-bottom: 0px;
+            margin-left: 70px;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-section">
+        <h1>CONTROL MOBILE ROBOT</h1>
+        <!-- Group 1 -->
+        <div class="group1">
+            <p>TELEOP</p>
+            <div class="vertical-button-group">
+                <button id="forward" class="green-button">&#9650; </button>
+                <div >
+                    <button id="left" class="green-button left-button">&#9664; </button>
+                    <button id="right" class="green-button right-button">&#9654; </button>
+                </div>
+                <div >
+                    <button id="stop" class="stop-button  ">&#9679; Stop</button>
+                </div>
+                
+                <button id="backward" class="green-button">&#9660; </button>
+            </div>
+        </div>
+        <!-- Group 2 -->
+        <div class="group2">
+            <p>NAVIGATION</p>
+            <div>
+                <button id="navigation" class="orange-button">Navigation</button>
+            </div>
+            <div class="coordinate-input">
+                <input type="text" id="coordinates" placeholder="Enter (x, y, yaw)">
+                <button id="sendPoint" class="send-button">Send Point</button>
+            </div>
+            
+            <div>
+                <button onclick="sendFixedPoint(0)" class="blue-button">Home(0.0,0.0,0.0)</button>
+                <button onclick="sendFixedPoint(1)" class="blue-button">A(2.5, -1.8, 90.0)</button>
+                <button onclick="sendFixedPoint(2)" class="blue-button">B(2.5, 1.2, 180.0)</button>
+                <button onclick="sendFixedPoint(3)" class="blue-button">C(-4.0, 1.2, -90.0)</button>
+            </div>
+        </div>
+        <!-- Group 3 -->
+        <div class="group3">
+            
+            <div>
+                <p>CIRCLE TRAJECTORY</p>
+                <button id="startPathTracking" class="circle-button">Circle-Track</button>
+                <button id="emergency" class="emer-button">EMERGENCY</button>
+                <button id="move_circle" class="circle-button">Circle-Navi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code to handle button clicks and form submission
+        document.getElementById('forward').onclick = function() {
+            // Send forward command to the robot
+            fetch('/forward')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('backward').onclick = function() {
+            // Send backward command to the robot
+            fetch('/backward')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('left').onclick = function() {
+            // Send left turn command to the robot
+            fetch('/left')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('right').onclick = function() {
+            // Send right turn command to the robot
+            fetch('/right')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('stop').onclick = function() {
+            // Send stop command to the robot
+            fetch('/stop')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('sendPoint').onclick = function() {
+            // Retrieve coordinates and send them to the robot
+            var coordinates = document.getElementById('coordinates').value;
+            var [x, y, yaw] = coordinates.split(',');
+            fetch('/send_point', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    x: parseFloat(x),
+                    y: parseFloat(y),
+                    yaw: parseFloat(yaw),
+                }),
+            })
+            .then(response => console.log(response))
+            .catch(error => console.error('Error:', error));
+        };
+
+        function sendFixedPoint(pointId) {
+            fetch(`/fixed_point/${pointId}`)
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('startPathTracking').onclick = function() {
+            // Start path tracking
+            fetch('/start_path_tracking')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('move_circle').onclick = function() {
+            // Start path tracking
+            fetch('/move_circle')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('navigation').onclick = function() {
+            // Start Navigation
+            fetch('/navigation')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+        document.getElementById('emergency').onclick = function() {
+            // Stop navigation, path_tracking
+            fetch('/emergency')
+                .then(response => console.log(response))
+                .catch(error => console.error('Error:', error));
+        };
+    </script>
+</body>
+</html>
+
